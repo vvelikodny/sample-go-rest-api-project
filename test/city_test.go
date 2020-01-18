@@ -2,7 +2,9 @@ package test
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/stretchr/testify/require"
+	"github.com/vvelikodny/weather/internal/entity"
 	"net/http"
 	"os"
 
@@ -18,11 +20,13 @@ type CityTestSuite struct {
 	suite.Suite
 
 	serverHandler http.Handler
+	db            *dbx.DB
 }
 
 func (s *CityTestSuite) SetupTest() {
 	logger := log.New()
 
+	var err error
 	// load application configurations
 	cfg, err := config.Load("../config/test.yml", logger)
 	if err != nil {
@@ -31,13 +35,13 @@ func (s *CityTestSuite) SetupTest() {
 	}
 
 	// connect to the database
-	db, err := dbx.MustOpen("postgres", cfg.DSN)
+	s.db, err = dbx.MustOpen("postgres", cfg.DSN)
 	if err != nil {
 		logger.Error(err)
 		os.Exit(-1)
 	}
 
-	s.serverHandler = router.BuildHandler(logger, dbcontext.New(db), cfg)
+	s.serverHandler = router.BuildHandler(logger, dbcontext.New(s.db), cfg)
 }
 
 func (s *CityTestSuite) TestCreateCityEmptyBody() {
@@ -75,8 +79,63 @@ func (s *CityTestSuite) TestCreateCityOK() {
 		s.serverHandler,
 		http.MethodPost,
 		"/cities",
-		[]byte(`{"name": "Berlin"}`),
+		[]byte(`{"name": "Berlin", "latitude": 55.66, "longitude": 66.77}`),
+	)
+
+	require.Equal(s.T(), http.StatusCreated, resp.Code)
+}
+
+func (s *CityTestSuite) TestPatchCityOK() {
+	city := entity.City{Name: "Munich", Latitude: 55.66, Longitude: 66.77}
+	s.Require().NoError(s.db.Model(&city).Insert())
+
+	newName := "NewMinuch"
+
+	resp := runV1Request(s.T(),
+		s.serverHandler,
+		http.MethodPatch,
+		fmt.Sprintf("/cities/%d", city.ID),
+		[]byte(fmt.Sprintf(`{"name": "%s"}`, newName)),
+	)
+
+	s.Require().Equal(http.StatusOK, resp.Code)
+
+	var b entity.City
+	s.Require().NoError(json.NewDecoder(resp.Body).Decode(&b))
+
+	s.Require().Equal(newName, b.Name)
+}
+
+func (s *CityTestSuite) TestDeleteCityOK() {
+	city := entity.City{Name: "Ivanovo", Latitude: 55.66, Longitude: 66.77}
+	require.NoError(s.T(), s.db.Model(&city).Insert())
+
+	resp := runV1Request(s.T(),
+		s.serverHandler,
+		http.MethodDelete,
+		fmt.Sprintf("/cities/%d", city.ID),
+		[]byte(nil),
 	)
 
 	require.Equal(s.T(), http.StatusOK, resp.Code)
+
+	resp = runV1Request(s.T(),
+		s.serverHandler,
+		http.MethodDelete,
+		fmt.Sprintf("/cities/%d", city.ID),
+		[]byte(nil),
+	)
+
+	require.Equal(s.T(), http.StatusNotFound, resp.Code)
+}
+
+func (s *CityTestSuite) TestDeleteCityBadID() {
+	resp := runV1Request(s.T(),
+		s.serverHandler,
+		http.MethodDelete,
+		fmt.Sprintf("/cities/%d", 0),
+		[]byte(nil),
+	)
+
+	require.Equal(s.T(), http.StatusNotFound, resp.Code)
 }

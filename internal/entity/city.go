@@ -11,5 +11,4 @@ type City struct {
 	Latitude  float64   `json:"latitude" sql:"latitude"`
 	Longitude float64   `json:"longitude" sql:"longitude"`
 	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
 }

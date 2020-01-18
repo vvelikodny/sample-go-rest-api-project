@@ -26,7 +26,7 @@ func BuildHandler(logger log.Logger, db *dbcontext.DB, cfg *config.Config) http.
 		cors.Handler(cors.AllowAll),
 	)
 
-	rg := router.Group("/v1")
+	rg := router.Group("")
 
 	cityRepo := city.NewRepository(db, logger)
 

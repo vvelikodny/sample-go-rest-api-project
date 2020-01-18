@@ -29,7 +29,7 @@ WORKDIR /app/
 COPY --from=build /usr/local/bin/migrate /usr/local/bin
 COPY --from=build /app/migrations ./migrations/
 COPY --from=build /app/server .
-COPY --from=build /app/deploy/entrypoint.sh .
+COPY --from=build /app/build/entrypoint.sh .
 COPY --from=build /app/config/*.yml ./config/
 RUN ls -la
 ENTRYPOINT ["./entrypoint.sh"]

@@ -34,7 +34,7 @@ build:  ## build the API server binary
 
 .PHONY: build-docker
 build-docker: ## build the API server as a docker image
-	docker build -f deploy/Dockerfile -t server .
+	docker build -f build/Dockerfile -t server .
 
 .PHONY: clean
 clean: ## remove temporary files
@@ -49,10 +49,6 @@ db-start: ## start the database server
 .PHONY: db-stop
 db-stop: ## stop the database server
 	docker stop postgres
-
-.PHONY: lint
-lint: ## run golint on all Go package
-	@golint $(PACKAGES)
 
 .PHONY: migrate
 migrate: ## run all new database migrations
