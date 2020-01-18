@@ -24,7 +24,7 @@ type City struct {
 
 // CreateCityRequest represents an city creation request.
 type CreateCityRequest struct {
-	Name      string  `json:"name"`
+	Name      string  `json:"name" `
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
 }
@@ -135,7 +135,6 @@ func patchValue(logger log.Logger, entity interface{}, req PatchCityRequest) boo
 	patch := false
 	for i := 0; i < rv.NumField(); i++ {
 		if !rv.Field(i).IsNil() {
-			logger.Infof("replace %s with value %v %v %v", rt.Field(i).Name, rv.Field(i).Elem(), cityv.Elem().FieldByName(rt.Field(i).Name).CanSet())
 			cityv.Elem().FieldByName(rt.Field(i).Name).Set(rv.Field(i).Elem())
 
 			patch = true

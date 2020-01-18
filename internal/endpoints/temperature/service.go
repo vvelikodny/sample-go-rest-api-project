@@ -22,23 +22,29 @@ type Temperature struct {
 
 // CreateTemperatureRequest represents an temperature creation request.
 type CreateTemperatureRequest struct {
-	CityID int `json:"city_id"`
-	Min    int `json:"min"`
-	Max    int `json:"max"`
+	CityID int  `json:"city_id"`
+	Min    *int `json:"min"`
+	Max    *int `json:"max"`
 }
 
 // Validate validates the CreateTemperatureRequest fields.
 func (m CreateTemperatureRequest) Validate() error {
+	err := validation.ValidateStruct(&m,
+		validation.Field(&m.CityID, validation.Required),
+		validation.Field(&m.Min, validation.Required, validation.Min(-100), validation.Max(100)),
+		validation.Field(&m.Max, validation.Required, validation.Min(-100), validation.Max(100)),
+	)
+	if err != nil {
+		return err
+	}
+
 	errs := validation.Errors{}
-	if m.Min > m.Max {
+	if *m.Min > *m.Max {
 		errs["min"] = errors.New("min should be less then max")
 		return errs
 	}
-	return validation.ValidateStruct(&m,
-		validation.Field(&m.CityID, validation.Required),
-		validation.Field(&m.Min, validation.Min(-100), validation.Max(100)),
-		validation.Field(&m.Max, validation.Min(-100), validation.Max(100)),
-	)
+
+	return nil
 }
 
 type service struct {
@@ -68,8 +74,8 @@ func (s service) Create(ctx context.Context, req CreateTemperatureRequest) (Temp
 	now := time.Now()
 	temperature := entity.Temperature{
 		CityID:    req.CityID,
-		Min:       req.Min,
-		Max:       req.Max,
+		Min:       *req.Min,
+		Max:       *req.Max,
 		CreatedAt: now,
 	}
 	err := s.repo.Create(ctx, &temperature)

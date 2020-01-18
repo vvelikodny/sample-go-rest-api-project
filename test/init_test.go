@@ -27,6 +27,8 @@ func TestSuites(t *testing.T) {
 	require.NoError(t, resetDB(t))
 
 	suite.Run(t, new(CityTestSuite))
+	suite.Run(t, new(TemperatureTestSuite))
+	suite.Run(t, new(WebhookTestSuite))
 }
 
 func resetDB(t *testing.T) error {
