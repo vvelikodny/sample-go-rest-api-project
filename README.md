@@ -1,1 +1,1 @@
-![](https://github.com/vvelikodny/sample-go-rest-api-project/workflows/.github/workflows/go.yml/badge.svg?branch=master)
+![](https://github.com/vvelikodny/sample-go-rest-api-project/workflows/.github/workflows/build.yml/badge.svg?branch=master)
