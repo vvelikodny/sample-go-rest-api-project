@@ -75,8 +75,8 @@ func (s *CityTestSuite) TestCreateCityOK() {
 		s.serverHandler,
 		http.MethodPost,
 		"/cities",
-		[]byte(`{"name": "Berlin"}`),
+		[]byte(`{"name": "Berlin", "latitude": 55.66, "longitude": 66.77}`),
 	)
 
-	require.Equal(s.T(), http.StatusOK, resp.Code)
+	require.Equal(s.T(), http.StatusCreated, resp.Code)
 }

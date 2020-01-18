@@ -84,7 +84,6 @@ func (s service) Create(ctx context.Context, req CreateCityRequest) (City, error
 		Latitude:  req.Latitude,
 		Longitude: req.Longitude,
 		CreatedAt: now,
-		UpdatedAt: now,
 	}
 	err := s.repo.Create(ctx, &city)
 	if err != nil {
@@ -107,8 +106,6 @@ func (s service) Update(ctx context.Context, id int, req PatchCityRequest) (City
 	if !patchValue(s.logger, &city, req) {
 		return city, nil
 	}
-
-	city.UpdatedAt = time.Now()
 
 	if err := s.repo.Update(ctx, city.City); err != nil {
 		return city, err
