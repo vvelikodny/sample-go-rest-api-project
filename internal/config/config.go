@@ -10,13 +10,13 @@ import (
 )
 
 const (
-	DefaultServerPort    = 8080
+	DefaultServerPort    = 3000
 	DefaultJWTExpiration = 72
 )
 
 // Config represents an application configuration.
 type Config struct {
-	// the server port. Defaults to 8080
+	// the server port. Defaults in `DefaultServerPort`
 	ServerPort int `yaml:"server_port" env:"SERVER_PORT"`
 	// the data source name (DSN) for connecting to the database. required.
 	DSN string `yaml:"dsn" env:"DSN,secret"`

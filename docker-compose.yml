@@ -4,14 +4,14 @@ services:
     image: server
     build:
       context: .
-      dockerfile: cmd/server/Dockerfile
+      dockerfile: build/Dockerfile
     volumes:
       - /tmp/app:/var/log/app
     ports:
-      - "8080:8080"
+      - "3000:3000"
     environment:
       - APP_ENV=local
-      #- APP_DSN=postgres://db/postgres?sslmode=disable&user=postgres&password=postgres
+      - APP_DSN=postgres://db/postgres?sslmode=disable&user=postgres&password=postgres
     depends_on:
       db:
         condition: service_healthy

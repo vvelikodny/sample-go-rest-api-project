@@ -3,7 +3,6 @@ package test
 import (
 	"bytes"
 	"database/sql"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -65,7 +64,7 @@ func runMigrations(db *sql.DB) error {
 func runV1Request(t *testing.T, router http.Handler, method, URL string, body []byte) *httptest.ResponseRecorder {
 	req, err := http.NewRequest(
 		method,
-		fmt.Sprintf("/v1%s", URL),
+		URL,
 		bytes.NewBuffer(body),
 	)
 	require.NoError(t, err)
