@@ -1,0 +1,9 @@
+.idea/
+vendor/
+postgres/
+
+*.out
+coverage*.*
+
+# server binary
+server

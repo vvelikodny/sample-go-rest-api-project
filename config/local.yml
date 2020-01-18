@@ -1,0 +1,3 @@
+dsn: "postgres://127.0.0.1/postgres?sslmode=disable&user=postgres&password=postgres"
+jwt_signing_key: "93ktkBAkEktzELcF6knmPaMrrC55"
+jwt_verification_key: "K4H4isnE6aMGTFdRK7X9ftXoKNQm"
