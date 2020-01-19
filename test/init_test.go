@@ -27,6 +27,7 @@ func TestSuites(t *testing.T) {
 
 	suite.Run(t, new(CityTestSuite))
 	suite.Run(t, new(TemperatureTestSuite))
+	suite.Run(t, new(ForecastTestSuite))
 	suite.Run(t, new(WebhookTestSuite))
 }
 
