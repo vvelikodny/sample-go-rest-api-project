@@ -29,7 +29,7 @@ make migrate
 make run
 ```
 
-At this time, you have a RESTful API server running at `http://127.0.0.1:3000/v1/`.
+At this time, you have a RESTful API server running at `http://127.0.0.1:3000/`.
 
 ## REST API Tests, DB should be started
 
